@@ -104,3 +104,39 @@ export function setDriftSound(intensity) {
   screech.gain.gain.setTargetAtTime(intensity * 0.16, now, 0.06)
   screech.band.frequency.setTargetAtTime(1700 + intensity * 500, now, 0.1)
 }
+
+/** ruído marrom (grave, "retumbante") para o trovão */
+let thunderBuffer = null
+function brownNoise(seconds) {
+  const buf = ctx.createBuffer(1, ctx.sampleRate * seconds, ctx.sampleRate)
+  const data = buf.getChannelData(0)
+  let last = 0
+  for (let i = 0; i < data.length; i++) {
+    last = (last + 0.02 * (Math.random() * 2 - 1)) / 1.02
+    data[i] = last * 3.5
+  }
+  return buf
+}
+
+/**
+ * Trovão: estalo seco seguido de um ronco que vai morrendo.
+ * delay: segundos depois do clarão (a luz chega antes do som).
+ */
+export function playThunder(delay = 1, strength = 1) {
+  if (!ctx || ctx.state !== 'running') return
+  thunderBuffer ??= brownNoise(6)
+  const t0 = ctx.currentTime + delay
+  const src = new AudioBufferSourceNode(ctx, { buffer: thunderBuffer })
+  const lp = new BiquadFilterNode(ctx, { type: 'lowpass', frequency: 1200, Q: 0.5 })
+  lp.frequency.setValueAtTime(1200, t0)
+  lp.frequency.exponentialRampToValueAtTime(160, t0 + 2.5)
+  const g = new GainNode(ctx, { gain: 0 })
+  g.gain.setValueAtTime(0, t0)
+  g.gain.linearRampToValueAtTime(0.9 * strength, t0 + 0.06)
+  g.gain.exponentialRampToValueAtTime(0.3 * strength, t0 + 0.7)
+  g.gain.linearRampToValueAtTime(0.55 * strength, t0 + 1.2)
+  g.gain.exponentialRampToValueAtTime(0.001, t0 + 5)
+  src.connect(lp).connect(g).connect(master)
+  src.start(t0, Math.random() * 0.5)
+  src.stop(t0 + 5.2)
+}

@@ -33,6 +33,7 @@ export const CHECKPOINTS = [
     body: [
       'Câmera, luz ambiente azulada, neblina exponencial e um cilindro gigante com o skyline de Tóquio ao fundo — ele não sofre neblina, então parece infinitamente distante.',
       'O chão é um espelho borrado que imita asfalto molhado.',
+      'De tempos em tempos cai um raio: uma linha quebrada gerada na hora (deslocamento do ponto médio, com galhos), desenhada em fitas com brilho aditivo. O clarão acende o céu, o chão molhado reflete o raio e, com som ligado, o trovão chega um pouco depois.',
     ],
   },
   {

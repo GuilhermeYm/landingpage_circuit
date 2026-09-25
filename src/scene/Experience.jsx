@@ -4,6 +4,7 @@ import { CameraRig } from './CameraRig'
 import { Checkpoints } from './Checkpoints'
 import { Ground } from './Ground'
 import { Lights } from './Lights'
+import { Lightning } from './Lightning'
 import { Rain } from './Rain'
 import { Skyline } from './Skyline'
 import { Track } from './Track'
@@ -23,6 +24,7 @@ export function Experience() {
       <fogExp2 attach="fog" args={[FOG_COLOR, 0.0055]} />
       <Lights />
       <Skyline />
+      <Lightning />
       <Ground />
       <Track />
       <Checkpoints />
