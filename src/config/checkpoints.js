@@ -52,7 +52,7 @@ export const CHECKPOINTS = [
     kicker: 'Física de mentira, sensação de verdade',
     body: [
       'O carro anda preso à pista: velocidade ao longo do trajeto, deslocamento lateral e uma força centrífuga simples nas curvas.',
-      'Solte o acelerador na curva, segure Espaço, e ele escorrega.',
+      'O drift é um estado à parte: Espaço (ou freada forte) + direção joga a traseira para fora; acelerar mantém o ângulo, contraesterço endireita. Fumaça, marcas no asfalto, som de pneu e placar vêm do mesmo estado.',
     ],
   },
   {

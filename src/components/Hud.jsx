@@ -87,7 +87,7 @@ export function Hud() {
           <Kbd>D</Kbd> direção
         </span>
         <span>
-          <Kbd>Espaço</Kbd> freio de mão
+          <Kbd>Espaço</Kbd> + direção = drift
         </span>
       </div>
     </div>

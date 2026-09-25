@@ -10,6 +10,7 @@ import { ASSETS } from '../config/assets'
 let ctx = null
 let master = null
 let engine = null
+let screech = null
 
 function noiseBuffer(seconds = 3) {
   const buf = ctx.createBuffer(1, ctx.sampleRate * seconds, ctx.sampleRate)
@@ -47,6 +48,23 @@ function start() {
   osc.start()
   engine = { osc, filter: oscLp, gain: oscGain }
 
+  // pneu cantando: ruído em banda estreita, com um leve "tremido"
+  const band = new BiquadFilterNode(ctx, { type: 'bandpass', frequency: 1900, Q: 6 })
+  const band2 = new BiquadFilterNode(ctx, { type: 'bandpass', frequency: 3100, Q: 8 })
+  const screechGain = new GainNode(ctx, { gain: 0 })
+  const noise = noiseBuffer(2)
+  loopSource(noise, band, screechGain)
+  const src2 = ctx.createBufferSource()
+  src2.buffer = noise
+  src2.loop = true
+  src2.connect(band2).connect(screechGain)
+  src2.start(0, 0.7)
+  const wobble = new OscillatorNode(ctx, { frequency: 9 })
+  const wobbleDepth = new GainNode(ctx, { gain: 120 })
+  wobble.connect(wobbleDepth).connect(band.frequency)
+  wobble.start()
+  screech = { gain: screechGain, band }
+
   // trilha opcional
   fetch(ASSETS.ambientAudio)
     .then((r) => (r.ok && r.headers.get('content-type')?.startsWith('audio') ? r.arrayBuffer() : null))
@@ -66,11 +84,23 @@ export function setAudioEnabled(on) {
   master.gain.setTargetAtTime(on ? 1 : 0, ctx.currentTime, 0.4)
 }
 
-/** ratio: 0 (parado) a 1 (velocidade máxima) */
-export function setEngine(ratio) {
+/**
+ * ratio: 0 (parado) a 1 (velocidade máxima)
+ * slip: 0‑1, no drift as rodas giram em falso e o giro sobe
+ */
+export function setEngine(ratio, slip = 0) {
   if (!engine || ctx.state !== 'running') return
   const now = ctx.currentTime
+  ratio = Math.min(1, ratio + slip * 0.25)
   engine.osc.frequency.setTargetAtTime(38 + ratio * 110, now, 0.1)
   engine.filter.frequency.setTargetAtTime(220 + ratio * 900, now, 0.1)
   engine.gain.gain.setTargetAtTime(0.03 + ratio * 0.07, now, 0.1)
+}
+
+/** intensity: 0‑1, volume do pneu cantando */
+export function setDriftSound(intensity) {
+  if (!screech || ctx.state !== 'running') return
+  const now = ctx.currentTime
+  screech.gain.gain.setTargetAtTime(intensity * 0.16, now, 0.06)
+  screech.band.frequency.setTargetAtTime(1700 + intensity * 500, now, 0.1)
 }

@@ -5,10 +5,11 @@ import { gsap } from '../lib/gsap'
 import { DRIVING } from '../config/track'
 import { useExperience } from '../store/useExperience'
 import { CHECKPOINT_POINTS } from './track'
-import { vehicle } from './vehicleState'
+import { drift, vehicle } from './vehicleState'
 
 const UP = new Vector3(0, 1, 0)
 const tmp = new Vector3()
+const chaseDir = new Vector3()
 
 /**
  * Três "planos" de câmera misturados por pesos animados com GSAP:
@@ -54,13 +55,14 @@ export function CameraRig() {
     const t = clock.elapsedTime
     const speedRatio = Math.abs(vehicle.speed) / DRIVING.maxSpeed
 
-    // chase (sempre atualizado, para a transição da intro ser contínua)
-    const f = vehicle.forward
-    tmp.copy(vehicle.position).addScaledVector(f, -9 - speedRatio * 2).addScaledVector(UP, 3.6)
+    // chase (sempre atualizado, para a transição da intro ser contínua).
+    // No drift a câmera gira para o lado de fora e mostra a lateral do carro.
+    const f = chaseDir.copy(vehicle.forward).applyAxisAngle(UP, -drift.angle * 0.55)
+    tmp.copy(vehicle.position).addScaledVector(f, -9 - speedRatio * 2 + drift.intensity * 2.5).addScaledVector(UP, 3.6 - drift.intensity * 0.8)
     chasePos.x = MathUtils.damp(chasePos.x, tmp.x, 5, dt)
     chasePos.y = MathUtils.damp(chasePos.y, tmp.y, 5, dt)
     chasePos.z = MathUtils.damp(chasePos.z, tmp.z, 5, dt)
-    tmp.copy(vehicle.position).addScaledVector(f, 6).addScaledVector(UP, 2.4)
+    tmp.copy(vehicle.position).addScaledVector(vehicle.forward, 6).addScaledVector(UP, 2.4)
     chaseLook.lerp(tmp, 1 - Math.exp(-10 * dt))
 
     // overview
@@ -85,7 +87,7 @@ export function CameraRig() {
     camera.position.y += Math.sin(t * 29) * shake
 
     camera.lookAt(look)
-    camera.fov = MathUtils.lerp(48, 50 + speedRatio * 16, i * (1 - mix.focus))
+    camera.fov = MathUtils.lerp(48, 50 + speedRatio * 16 + drift.intensity * 5, i * (1 - mix.focus))
     camera.updateProjectionMatrix()
   })
 

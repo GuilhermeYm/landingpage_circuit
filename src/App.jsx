@@ -3,6 +3,7 @@ import { Experience } from './scene/Experience'
 import { KEYMAP } from './scene/controls'
 import { LoadingScreen } from './components/LoadingScreen'
 import { Hud } from './components/Hud'
+import { DriftMeter } from './components/DriftMeter'
 import { CheckpointPanel } from './components/CheckpointPanel'
 import { SoundToggle } from './components/SoundToggle'
 
@@ -13,6 +14,7 @@ export default function App() {
         <Experience />
       </main>
       <Hud />
+      <DriftMeter />
       <CheckpointPanel />
       <SoundToggle />
       <LoadingScreen />

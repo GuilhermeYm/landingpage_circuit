@@ -18,7 +18,7 @@ npm run build
 | `W` / `↑` | acelera |
 | `S` / `↓` | freia / ré |
 | `A` `D` / `←` `→` | direção |
-| `Espaço` | freio de mão (derrapa) |
+| `Espaço` + direção | inicia o drift (acelere para manter, contraesterce para sair) |
 | `E` / `Enter` | abre o checkpoint próximo |
 | `Esc` | fecha o painel |
 

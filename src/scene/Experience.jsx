@@ -8,6 +8,7 @@ import { Rain } from './Rain'
 import { Skyline } from './Skyline'
 import { Track } from './Track'
 import { Vehicle } from './Vehicle'
+import { DriftEffects } from './DriftEffects'
 import { FOG_COLOR } from './constants'
 
 
@@ -26,6 +27,7 @@ export function Experience() {
       <Track />
       <Checkpoints />
       <Vehicle />
+      <DriftEffects />
       <Rain />
       <CameraRig />
     </Canvas>

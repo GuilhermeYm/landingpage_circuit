@@ -40,6 +40,17 @@ export const DRIVING = {
   grip: 4.2,
   /** aderência com o freio de mão (Espaço) */
   handbrakeGrip: 0.9,
+
+  // --- drift ---------------------------------------------------------------
+  /** velocidade mínima (m/s) para iniciar um drift */
+  driftMinSpeed: 15,
+  /** ângulo da carroceria (rad) segurando o drift sem acelerar / acelerando */
+  driftAngle: 0.42,
+  driftAnglePower: 0.68,
+  /** aderência lateral durante o drift (baixa = escorrega mais para fora) */
+  driftGrip: 1.6,
+  /** quanto o carro perde de velocidade por estar de lado */
+  driftDrag: 16,
   /** distância (m) ao longo da pista para "entrar" num checkpoint */
   checkpointRadius: 26,
 }
