@@ -1,0 +1,36 @@
+{
+  "name": "landingpage",
+  "version": "1.0.0",
+  "description": "Landing page cinematográfica 3D que documenta a própria construção",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GuilhermeYm/landingpage.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/GuilhermeYm/landingpage/issues"
+  },
+  "homepage": "https://github.com/GuilhermeYm/landingpage#readme",
+  "dependencies": {
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.1",
+    "gsap": "^3.15.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "three": "^0.186.1",
+    "zustand": "^5.0.15"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@vitejs/plugin-react": "^6.1.1",
+    "tailwindcss": "^4.3.3",
+    "vite": "^8.3.1"
+  },
+  "private": true,
+  "type": "module"
+}
