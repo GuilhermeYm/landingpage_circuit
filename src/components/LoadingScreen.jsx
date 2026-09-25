@@ -45,10 +45,16 @@ export function LoadingScreen() {
     return () => cancelAnimationFrame(raf)
   }, [])
 
+  // valores finais explícitos (fromTo): com o StrictMode o efeito roda duas vezes e
+  // um from() leria o estado intermediário como destino
   // entrada: título, subtítulo e barra sobem desfocando em sequência
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from('[data-enter]', { y: 28, opacity: 0, filter: 'blur(10px)', duration: 1.1, stagger: 0.15, ease: 'power3.out', delay: 0.15 })
+      gsap.fromTo(
+        '[data-enter]',
+        { y: 28, opacity: 0, filter: 'blur(10px)' },
+        { y: 0, opacity: 1, filter: 'blur(0px)', duration: 1.1, stagger: 0.15, ease: 'power3.out', delay: 0.15 },
+      )
     }, root)
     return () => ctx.revert()
   }, [])
@@ -57,7 +63,11 @@ export function LoadingScreen() {
   useEffect(() => {
     if (phase !== 'ready') return
     const ctx = gsap.context(() => {
-      gsap.from('[data-enter-btn]', { y: 16, opacity: 0, scale: 0.94, duration: 0.7, stagger: 0.1, ease: 'back.out(1.8)' })
+      gsap.fromTo(
+        '[data-enter-btn]',
+        { y: 16, opacity: 0, scale: 0.94 },
+        { y: 0, opacity: 1, scale: 1, duration: 0.7, stagger: 0.1, ease: 'back.out(1.8)' },
+      )
     }, root)
     return () => ctx.revert()
   }, [phase])
@@ -114,7 +124,7 @@ function EnterButton({ primary, children, ...props }) {
     <button
       data-enter-btn
       type="button"
-      className={`rounded-full border px-6 py-3 font-mono text-xs uppercase tracking-[0.25em] transition ${
+      className={`rounded-full border px-6 py-3 font-mono text-xs uppercase tracking-[0.25em] transition-colors ${
         primary
           ? 'border-ember bg-ember text-night hover:bg-transparent hover:text-ember'
           : 'border-white/20 text-white/70 hover:border-white hover:text-white'

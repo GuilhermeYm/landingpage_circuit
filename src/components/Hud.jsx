@@ -20,10 +20,10 @@ export function Hud() {
     const ctx = gsap.context(() => {
       gsap
         .timeline({ defaults: { ease: 'power3.out' } })
-        .from('[data-hud="title"] > *', { y: -16, opacity: 0, duration: 0.9, stagger: 0.12 })
-        .from('[data-hud="nav"] > *', { x: 24, opacity: 0, duration: 0.7, stagger: 0.07 }, 0.2)
-        .from('[data-hud="speed"]', { y: 24, opacity: 0, duration: 0.9 }, 0.35)
-        .from('[data-hud="hints"] > *', { y: 12, opacity: 0, duration: 0.7, stagger: 0.1 }, 0.5)
+        .fromTo('[data-hud="title"] > *', { y: -16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, stagger: 0.12 })
+        .fromTo('[data-hud="nav"] > *', { x: 24, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7, stagger: 0.07 }, 0.2)
+        .fromTo('[data-hud="speed"]', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9 }, 0.35)
+        .fromTo('[data-hud="hints"] > *', { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, stagger: 0.1 }, 0.5)
     }, root)
     return () => ctx.revert()
   }, [phase])
@@ -61,7 +61,7 @@ export function Hud() {
                 e.currentTarget.blur()
                 open(cp.id)
               }}
-              className={`flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em] transition ${
+              className={`flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em] transition-colors ${
                 current ? 'text-white' : seen ? 'text-white/60 hover:text-white' : 'text-white/25 hover:text-white/60'
               }`}
             >
