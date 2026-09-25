@@ -44,7 +44,7 @@ Basta soltar em `public/` com estes nomes (ou mudar em `src/config/assets.js`):
 
 | Arquivo | Uso |
 | --- | --- |
-| `textures/tokyo-skyline.jpg` | fundo 360° (cilindro). Ajuste `horizon` e `skyColor` |
+| `textures/tokyo-skyline.webp` | fundo 360° (cilindro). Ajuste `repeat`, `horizon`, `haze` e `tint` |
 | `textures/asphalt-straight.jpg` | asfalto reto, repete ao longo da pista |
 | `textures/curve-XX.jpg` | curva do Meshy — ative com `decal` no checkpoint |
 | `models/car.glb` | carro low-poly, frente para +Z |

@@ -60,7 +60,7 @@ export function CameraRig() {
     chasePos.x = MathUtils.damp(chasePos.x, tmp.x, 5, dt)
     chasePos.y = MathUtils.damp(chasePos.y, tmp.y, 5, dt)
     chasePos.z = MathUtils.damp(chasePos.z, tmp.z, 5, dt)
-    tmp.copy(vehicle.position).addScaledVector(f, 6).addScaledVector(UP, 1)
+    tmp.copy(vehicle.position).addScaledVector(f, 6).addScaledVector(UP, 2.4)
     chaseLook.lerp(tmp, 1 - Math.exp(-10 * dt))
 
     // overview

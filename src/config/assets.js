@@ -6,15 +6,25 @@
  * nome em /public (ou ajustar o caminho abaixo) — nenhum código precisa mudar.
  */
 export const ASSETS = {
-  /** Skyline de Tóquio (fundo distante). Envolve a cena num cilindro. */
+  /**
+   * Skyline de Tóquio (fundo distante). Envolve a cena num cilindro; a altura
+   * sai da proporção da imagem, então ela nunca fica esticada.
+   */
   skyline: {
-    url: '/textures/tokyo-skyline.jpg',
-    /** quantas vezes a imagem se repete nos 360° (espelhada, para não ter emenda) */
-    repeat: 2,
-    /** fração da altura da imagem (de baixo p/ cima) onde fica a base dos prédios */
-    horizon: 0.28,
-    /** cor do céu acima da imagem (use a cor do topo da foto) */
-    skyColor: '#02040a',
+    url: '/textures/tokyo-skyline.webp',
+    /**
+     * quantas vezes a imagem se repete nos 360° (espelhada). 3 = torres a 120°
+     * uma da outra, então nunca aparecem duas na tela ao mesmo tempo.
+     */
+    repeat: 3,
+    /** fração da altura da imagem (de baixo p/ cima) que fica rente ao chão */
+    horizon: 0.47,
+    /** cor do céu acima da imagem (a cor do topo da foto × tint) */
+    skyColor: '#141b2e',
+    /** multiplica a cor da imagem (escurecer / puxar para o azul) */
+    tint: '#d6dcf0',
+    /** altura (m) da névoa que dissolve a base da cidade no chão */
+    haze: 40,
   },
 
   /** Textura reta de asfalto, tileável ao longo da pista. */

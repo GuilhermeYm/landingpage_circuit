@@ -8,8 +8,8 @@ import { Rain } from './Rain'
 import { Skyline } from './Skyline'
 import { Track } from './Track'
 import { Vehicle } from './Vehicle'
+import { FOG_COLOR } from './constants'
 
-export const FOG_COLOR = '#0a1122'
 
 export function Experience() {
   return (
