@@ -1,20 +1,28 @@
 import { useMemo } from 'react'
-import { BufferGeometry, Float32BufferAttribute } from 'three'
+import { BufferGeometry, ClampToEdgeWrapping, Float32BufferAttribute } from 'three'
 import { ASSETS } from '../config/assets'
+import { TRACK } from '../config/track'
 import { useOptionalTexture } from '../lib/useOptionalAsset'
 import { makeAsphaltTexture } from './placeholders'
-import { CHECKPOINT_POINTS, frameAt, halfWidth } from './track'
+import { frameAt, halfWidth } from './track'
+import { createTrackUV } from './trackUV'
 
-const SEGMENTS = 900
+const SEGMENTS = 1200
+/** metros por repetição da textura procedural */
+const PLACEHOLDER_TILE = 20
 
 /**
- * Malha da pista gerada ao longo da curva: uma "fita" com UV.x atravessando a
- * largura e UV.y avançando em metros / tileLength, para a textura reta
- * repetir sem distorcer.
+ * Malha da pista: uma "fita" gerada ao longo da curva, com várias colunas na
+ * largura (r = 0 lado esquerdo … 1 lado direito). Com a textura do Meshy ganha
+ * acostamento dos dois lados, que some aos poucos (alpha) no chão molhado.
  */
-function buildRibbon(tileLength) {
+function buildRibbon(trackUV) {
+  const textured = !!trackUV
+  const sh = textured ? ASSETS.track.shoulder : 0
+  const cols = textured ? [-sh, 0, 0.25, 0.5, 0.75, 1, 1 + sh] : [0, 1]
   const positions = []
   const uvs = []
+  const colors = []
   const indices = []
   const f = frameAt(0)
   const prev = f.point.clone()
@@ -24,59 +32,52 @@ function buildRibbon(tileLength) {
     frameAt(i / SEGMENTS, f)
     if (i > 0) dist += f.point.distanceTo(prev)
     prev.copy(f.point)
-    const l = f.point.clone().addScaledVector(f.side, halfWidth)
-    const r = f.point.clone().addScaledVector(f.side, -halfWidth)
-    positions.push(l.x, 0.02, l.z, r.x, 0.02, r.z)
-    uvs.push(0, dist / tileLength, 1, dist / tileLength)
+    for (const r of cols) {
+      const lateral = halfWidth - r * TRACK.width
+      positions.push(f.point.x + f.side.x * lateral, 0.02, f.point.z + f.side.z * lateral)
+      if (textured) uvs.push(...trackUV(dist, r))
+      else uvs.push(r, dist / PLACEHOLDER_TILE)
+      colors.push(1, 1, 1, r < 0 || r > 1 ? 0 : 1)
+    }
     if (i < SEGMENTS) {
-      const a = i * 2
-      indices.push(a, a + 1, a + 2, a + 1, a + 3, a + 2)
+      const n = cols.length
+      for (let c = 0; c < n - 1; c++) {
+        const a = i * n + c
+        indices.push(a, a + 1, a + n, a + 1, a + n + 1, a + n)
+      }
     }
   }
 
   const geo = new BufferGeometry()
   geo.setAttribute('position', new Float32BufferAttribute(positions, 3))
   geo.setAttribute('uv', new Float32BufferAttribute(uvs, 2))
+  geo.setAttribute('color', new Float32BufferAttribute(colors, 4))
   geo.setIndex(indices)
   geo.computeVertexNormals()
   return geo
 }
 
 export function Track() {
-  const { url, tileLength } = ASSETS.trackStraight
-  const geometry = useMemo(() => buildRibbon(tileLength), [tileLength])
-  const photo = useOptionalTexture(url)
+  const photo = useOptionalTexture(ASSETS.track.url, (t) => {
+    t.wrapS = t.wrapT = ClampToEdgeWrapping
+  })
   const placeholder = useMemo(() => makeAsphaltTexture(), [])
+  const trackUV = useMemo(() => photo && createTrackUV(photo.image), [photo])
+  const texture = trackUV ? photo : placeholder
+  const geometry = useMemo(() => buildRibbon(trackUV), [trackUV])
 
   return (
-    <group>
-      <mesh geometry={geometry}>
-        <meshStandardMaterial map={photo ?? placeholder} roughness={0.5} metalness={0.15} />
-      </mesh>
-      {CHECKPOINT_POINTS.filter((cp) => cp.decal).map((cp) => (
-        <CurveDecal key={cp.id} checkpoint={cp} />
-      ))}
-    </group>
-  )
-}
-
-/**
- * Textura de curva (não tileável) aplicada como um quadrado sobre o canto.
- * Só aparece se o arquivo existir. Ajuste `size` e `rotation` (radianos) no
- * config do checkpoint até a curva da imagem casar com a pista.
- */
-function CurveDecal({ checkpoint }) {
-  const { url, size = 34, rotation = 0 } = checkpoint.decal
-  const map = useOptionalTexture(url)
-  if (!map) return null
-  const inward = checkpoint.outward.clone().multiplyScalar(-size * 0.2)
-  return (
-    <mesh
-      position={[checkpoint.center.x + inward.x, 0.04, checkpoint.center.z + inward.z]}
-      rotation={[-Math.PI / 2, 0, rotation]}
-    >
-      <planeGeometry args={[size, size]} />
-      <meshStandardMaterial map={map} roughness={0.35} metalness={0.35} polygonOffset polygonOffsetFactor={-1} />
+    <mesh geometry={geometry}>
+      <meshStandardMaterial
+        map={texture}
+        vertexColors
+        transparent
+        roughness={0.4}
+        metalness={0.15}
+        emissiveMap={texture}
+        emissive="#ffffff"
+        emissiveIntensity={trackUV ? 0.35 : 0}
+      />
     </mesh>
   )
 }

@@ -25,13 +25,21 @@ export const ASSETS = {
     tint: '#d6dcf0',
     /** altura (m) da névoa que dissolve a base da cidade no chão */
     haze: 40,
+    /** posição x (0‑1) da torre na imagem — as nuvens balançam, ela não */
+    towerX: 0.645,
   },
 
-  /** Textura reta de asfalto, tileável ao longo da pista. */
-  trackStraight: {
-    url: '/textures/asphalt-straight.jpg',
-    /** quantas unidades de mundo cada repetição da textura cobre ao longo da pista */
-    tileLength: 20,
+  /**
+   * Textura da pista: UMA curva de 90° vista de cima (Meshy), entrando pela
+   * borda esquerda e saindo pela de baixo. As faixas brancas das bordas são
+   * detectadas sozinhas e a faixa da imagem é "desenrolada" ao longo do
+   * traçado inteiro: o meio de cada curva da pista mostra o meio da curva da
+   * imagem, e as retas continuam o mesmo asfalto espelhado.
+   */
+  track: {
+    url: '/textures/track-curve.webp',
+    /** acostamento visível além das faixas, em fração da largura da pista */
+    shoulder: 0.15,
   },
 
   /** Carro low-poly (.glb). O modelo deve "olhar" para +Z; ajuste abaixo se não. */

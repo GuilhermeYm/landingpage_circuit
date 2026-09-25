@@ -24,7 +24,7 @@ export function useOptionalAsset(url, Loader, prepare) {
         if (alive) setAsset(loaded)
       },
       undefined,
-      () => console.info(`[assets] ${url} não encontrado — usando placeholder`),
+      (e) => console.info(`[assets] ${url} não encontrado — usando placeholder`, e?.message ?? e),
     )
     return () => {
       alive = false

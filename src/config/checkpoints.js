@@ -2,8 +2,7 @@
  * Pontos ao longo da pista. Cada um fica numa curva (`corner` = índice em
  * TRACK.corners) e documenta uma etapa da construção deste site.
  *
- * Os textos são rascunhos — substitua à vontade. `decal` (opcional) é a
- * textura de curva gerada no Meshy, aplicada só naquele trecho.
+ * Os textos são rascunhos — substitua à vontade.
  */
 export const CHECKPOINTS = [
   {
@@ -15,7 +14,6 @@ export const CHECKPOINTS = [
       'O ponto de partida foi o mirtilo.co/gp: um portfólio em que um carro percorre uma pista e cada curva guarda um projeto.',
       'A ideia aqui é inverter o jogo — em vez de projetos, cada curva conta uma etapa de como esta própria página foi construída.',
     ],
-    // decal: { url: '/textures/curve-01.jpg', size: 34, rotation: 0 },
   },
   {
     id: 'stack',
@@ -44,7 +42,7 @@ export const CHECKPOINTS = [
     kicker: 'Uma curva, muitas curvas',
     body: [
       'O traçado é um polígono cujos cantos viram curvas suaves (Catmull‑Rom). A malha da pista é gerada ao longo dessa curva, com UVs contínuos.',
-      'As texturas de curva do Meshy entram como decalques em cada canto; o asfalto reto se repete nos trechos entre elas.',
+      'A textura é uma única curva gerada no Meshy, "desenrolada" ao longo do traçado: o meio de cada curva da pista mostra o meio da curva da imagem.',
     ],
   },
   {

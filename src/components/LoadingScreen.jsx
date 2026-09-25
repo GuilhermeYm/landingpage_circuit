@@ -23,11 +23,16 @@ export function LoadingScreen() {
 
   useEffect(() => {
     const start = performance.now()
+    let last = start
     let value = 0
     let raf
     const tick = () => {
-      const byTime = ((performance.now() - start) / 1000 / MIN_DURATION) * 100
-      value += (Math.min(real.current, byTime) - value) * 0.08
+      const now = performance.now()
+      const dt = (now - last) / 1000
+      last = now
+      const byTime = ((now - start) / 1000 / MIN_DURATION) * 100
+      // suavização por tempo (não por frame), igual em 30 ou 144 fps
+      value += (Math.min(real.current, byTime) - value) * (1 - Math.exp(-5 * dt))
       if (value > 99.5) {
         setShown(100)
         useExperience.getState().setPhase('ready')

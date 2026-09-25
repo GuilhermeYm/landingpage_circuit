@@ -26,7 +26,7 @@ npm run build
 
 ```
 public/
-  textures/   skyline, asfalto, decalques de curva
+  textures/   skyline e textura da pista
   models/     car.glb
   audio/      ambient.mp3 (opcional)
 src/
@@ -45,8 +45,7 @@ Basta soltar em `public/` com estes nomes (ou mudar em `src/config/assets.js`):
 | Arquivo | Uso |
 | --- | --- |
 | `textures/tokyo-skyline.webp` | fundo 360° (cilindro). Ajuste `repeat`, `horizon`, `haze` e `tint` |
-| `textures/asphalt-straight.jpg` | asfalto reto, repete ao longo da pista |
-| `textures/curve-XX.jpg` | curva do Meshy — ative com `decal` no checkpoint |
+| `textures/track-curve.webp` | uma curva de 90° vista de cima, desenrolada na pista toda (calibração em `assets.js`) |
 | `models/car.glb` | carro low-poly, frente para +Z |
 | `audio/ambient.mp3` | trilha em loop; sem ela, toca chuva sintetizada |
 
