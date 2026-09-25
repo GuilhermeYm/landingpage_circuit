@@ -3,7 +3,7 @@ import { gsap } from '../lib/gsap'
 import { useExperience } from '../store/useExperience'
 import { CHECKPOINT_POINTS } from '../scene/track'
 
-/** Conteúdo expandido de um checkpoint. Esc fecha. */
+/** Conteúdo expandido de um checkpoint. Esc fecha (tratado no PauseScreen). */
 export function CheckpointPanel() {
   const openId = useExperience((s) => s.openId)
   const close = useExperience((s) => s.close)
@@ -29,12 +29,6 @@ export function CheckpointPanel() {
     }, root)
     return () => ctx.revert()
   }, [shownId])
-
-  useEffect(() => {
-    const onKey = (e) => e.key === 'Escape' && close()
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [close])
 
   const cp = CHECKPOINT_POINTS.find((c) => c.id === shownId)
   if (!cp) return null

@@ -9,6 +9,10 @@ export const useExperience = create((set) => ({
   phase: 'loading',
   setPhase: (phase) => set({ phase }),
 
+  /** Esc pausa a cena (o Canvas para de renderizar) */
+  paused: false,
+  setPaused: (paused) => set({ paused }),
+
   soundOn: false,
   setSound: (soundOn) => set({ soundOn }),
 

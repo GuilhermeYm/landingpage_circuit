@@ -14,8 +14,18 @@ export function Hud() {
   const root = useRef()
   const speedEl = useRef()
 
+  // entrada em cascata: título, marcadores da direita, velocímetro e dicas
   useEffect(() => {
-    if (phase === 'drive') gsap.fromTo(root.current, { opacity: 0 }, { opacity: 1, duration: 1.2 })
+    if (phase !== 'drive' || !root.current) return
+    const ctx = gsap.context(() => {
+      gsap
+        .timeline({ defaults: { ease: 'power3.out' } })
+        .from('[data-hud="title"] > *', { y: -16, opacity: 0, duration: 0.9, stagger: 0.12 })
+        .from('[data-hud="nav"] > *', { x: 24, opacity: 0, duration: 0.7, stagger: 0.07 }, 0.2)
+        .from('[data-hud="speed"]', { y: 24, opacity: 0, duration: 0.9 }, 0.35)
+        .from('[data-hud="hints"] > *', { y: 12, opacity: 0, duration: 0.7, stagger: 0.1 }, 0.5)
+    }, root)
+    return () => ctx.revert()
   }, [phase])
 
   // velocímetro fora do React: lê o estado mutável a cada frame
@@ -34,12 +44,12 @@ export function Hud() {
 
   return (
     <div ref={root} className="pointer-events-none fixed inset-0 z-20 p-5 md:p-8">
-      <header>
+      <header data-hud="title">
         <p className="font-mono text-[11px] uppercase tracking-[0.4em] text-ice/70">Night Circuit</p>
         <p className="mt-1 text-sm text-white/50">um site que documenta a própria construção</p>
       </header>
 
-      <nav className="pointer-events-auto absolute right-5 top-5 flex flex-col items-end gap-2 md:right-8 md:top-8">
+      <nav data-hud="nav" className="pointer-events-auto absolute right-5 top-5 flex flex-col items-end gap-2 md:right-8 md:top-8">
         {CHECKPOINT_POINTS.map((cp) => {
           const seen = visited.includes(cp.id)
           const current = cp.id === activeId || cp.id === openId
@@ -70,14 +80,14 @@ export function Hud() {
         </div>
       )}
 
-      <div className="absolute bottom-5 left-5 md:bottom-8 md:left-8">
+      <div data-hud="speed" className="absolute bottom-5 left-5 md:bottom-8 md:left-8">
         <p className="font-mono text-5xl tabular-nums leading-none" ref={speedEl}>
           0
         </p>
         <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.3em] text-white/40">km/h</p>
       </div>
 
-      <div className="absolute inset-x-0 bottom-6 hidden justify-center gap-5 font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 md:flex md:bottom-9">
+      <div data-hud="hints" className="absolute inset-x-0 bottom-6 hidden justify-center gap-5 font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 md:flex md:bottom-9">
         <span>
           <Kbd>W</Kbd>
           <Kbd>S</Kbd> acelera / freia

@@ -6,6 +6,7 @@ import { Hud } from './components/Hud'
 import { DriftMeter } from './components/DriftMeter'
 import { CheckpointPanel } from './components/CheckpointPanel'
 import { SoundToggle } from './components/SoundToggle'
+import { PauseScreen } from './components/PauseScreen'
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
       <DriftMeter />
       <CheckpointPanel />
       <SoundToggle />
+      <PauseScreen />
       <LoadingScreen />
     </KeyboardControls>
   )

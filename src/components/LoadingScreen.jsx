@@ -45,6 +45,23 @@ export function LoadingScreen() {
     return () => cancelAnimationFrame(raf)
   }, [])
 
+  // entrada: título, subtítulo e barra sobem desfocando em sequência
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from('[data-enter]', { y: 28, opacity: 0, filter: 'blur(10px)', duration: 1.1, stagger: 0.15, ease: 'power3.out', delay: 0.15 })
+    }, root)
+    return () => ctx.revert()
+  }, [])
+
+  // botões de entrada aparecem um a um quando o carregamento termina
+  useEffect(() => {
+    if (phase !== 'ready') return
+    const ctx = gsap.context(() => {
+      gsap.from('[data-enter-btn]', { y: 16, opacity: 0, scale: 0.94, duration: 0.7, stagger: 0.1, ease: 'back.out(1.8)' })
+    }, root)
+    return () => ctx.revert()
+  }, [phase])
+
   const enter = (withSound) => {
     const { setSound, setPhase } = useExperience.getState()
     setSound(withSound)
@@ -61,12 +78,14 @@ export function LoadingScreen() {
       ref={root}
       className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-night/80 px-6 text-center backdrop-blur-sm"
     >
-      <p className="font-mono text-[11px] uppercase tracking-[0.4em] text-ice/70">Night Circuit</p>
-      <h1 className="mt-4 max-w-xl text-3xl font-medium leading-tight md:text-5xl">
+      <p data-enter className="font-mono text-[11px] uppercase tracking-[0.4em] text-ice/70">
+        Night Circuit
+      </p>
+      <h1 data-enter className="mt-4 max-w-xl text-3xl font-medium leading-tight md:text-5xl">
         Uma pista que conta como <span className="text-ember">ela mesma</span> foi construída.
       </h1>
 
-      <div className="mt-12 h-16">
+      <div data-enter className="mt-12 h-16">
         {ready ? (
           <div className="flex flex-col gap-3 sm:flex-row">
             <EnterButton onClick={() => enter(true)} primary>
@@ -93,6 +112,7 @@ export function LoadingScreen() {
 function EnterButton({ primary, children, ...props }) {
   return (
     <button
+      data-enter-btn
       type="button"
       className={`rounded-full border px-6 py-3 font-mono text-xs uppercase tracking-[0.25em] transition ${
         primary
